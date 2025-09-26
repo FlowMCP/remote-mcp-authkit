@@ -46,7 +46,8 @@ export class MyMCP extends McpAgent<Env, unknown, Props> {
 			.loadFromFolderStatic( {
 				excludeSchemasWithImports: config.cfgSchemaImporter.excludeSchemasWithImports,
 				excludeSchemasWithRequiredServerParams: config.cfgSchemaImporter.excludeSchemasWithRequiredServerParams,
-				addAdditionalMetaData: config.cfgSchemaImporter.addAdditionalMetaData
+				addAdditionalMetaData: config.cfgSchemaImporter.addAdditionalMetaData,
+				outputType: 'onlySchema'
 			} )
 		console.log(`Loaded ${arrayOfSchemas.length} schemas`)
 
