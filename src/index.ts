@@ -134,8 +134,8 @@ export class MyMCP extends McpAgent<Env, unknown, Props> {
 }
 
 // Custom handler that combines OAuth and MCP functionality
-const createCombinedHandler = () => {
-	return (request: Request, env: Env, ctx: ExecutionContext) => {
+const combinedHandler = {
+	fetch: (request: Request, env: Env, ctx: ExecutionContext) => {
 		const url = new URL(request.url);
 		const routePath = env.ROUTE_PATH || "/mcp";
 
@@ -153,13 +153,13 @@ const createCombinedHandler = () => {
 
 		// For all other routes, delegate to AuthkitHandler
 		return AuthkitHandler.fetch(request, env, ctx);
-	};
+	}
 };
 
 export default new OAuthProvider({
 	apiRoute: "/sse",
-	apiHandler: createCombinedHandler() as any, // Use 'any' for maximum flexibility
-	defaultHandler: AuthkitHandler.fetch as any, // Use 'any' for maximum flexibility
+	apiHandler: combinedHandler as any, // ExportedHandler with fetch method
+	defaultHandler: AuthkitHandler as any, // Hono app has a fetch method
 	authorizeEndpoint: "/authorize",
 	tokenEndpoint: "/token",
 	clientRegistrationEndpoint: "/register",
