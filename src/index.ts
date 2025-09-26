@@ -15,8 +15,8 @@ export class MyMCP extends McpAgent<Env, unknown, Props> {
 	});
 
 	async init() {
-		// Load environment configuration with defaults
-		const env = (globalThis as any).env || {};
+		// Get environment from the McpAgent's env property
+		const env = this.env as Env;
 		console.log("Environment variables:", env);
 
 		const config = {
@@ -51,13 +51,19 @@ export class MyMCP extends McpAgent<Env, unknown, Props> {
 		console.log(`Loaded ${arrayOfSchemas.length} schemas`)
 
 		// Filter schemas based on configuration
-		const { filteredArrayOfSchemas } = FlowMCP
-			.filterArrayOfSchemas({
+		let filteredArrayOfSchemas;
+		try {
+			const filterResult = FlowMCP.filterArrayOfSchemas({
 				arrayOfSchemas,
 				includeNamespaces: config.cfgFilterArrayOfSchemas.includeNamespaces,
 				excludeNamespaces: config.cfgFilterArrayOfSchemas.excludeNamespaces,
 				activateTags: config.cfgFilterArrayOfSchemas.activateTags
-			} )
+			});
+			filteredArrayOfSchemas = filterResult.filteredArrayOfSchemas;
+		} catch (error) {
+			console.error('Error filtering schemas:', error);
+			filteredArrayOfSchemas = arrayOfSchemas;
+		}
 		console.log(`Filtered to ${filteredArrayOfSchemas.length} schemas`)
 
 		// Register schemas as MCP tools
@@ -139,8 +145,7 @@ const combinedHandler = {
 		const url = new URL(request.url);
 		const routePath = env.ROUTE_PATH || "/mcp";
 
-		// Store environment in global for access in MyMCP.init()
-		(globalThis as any).env = env;
+		// Environment is now accessed directly via this.env in MyMCP
 
 		// Handle MCP routes
 		if (url.pathname === "/sse" || url.pathname === "/sse/message") {
