@@ -6,4 +6,11 @@ interface Env {
 	WORKOS_CLIENT_SECRET: string;
 	MCP_OBJECT: DurableObjectNamespace /* MyMCP */;
 	AI: Ai;
+	ROUTE_PATH?: string;
+	SCHEMA_EXCLUDE_IMPORTS?: string;
+	SCHEMA_EXCLUDE_SERVER_PARAMS?: string;
+	SCHEMA_ADD_METADATA?: string;
+	FILTER_INCLUDE_NAMESPACES?: string;
+	FILTER_EXCLUDE_NAMESPACES?: string;
+	FILTER_ACTIVATE_TAGS?: string;
 }

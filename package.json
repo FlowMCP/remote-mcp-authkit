@@ -18,8 +18,10 @@
 		"@modelcontextprotocol/sdk": "1.18.1",
 		"@workos-inc/node": "^7.70.0",
 		"agents": "^0.2.0",
+		"flowmcp": "github:flowmcp/flowmcp#91ccaf8dc7b61b5df3cfa780699cbf4973cd3cbd",
 		"hono": "^4.9.8",
 		"jose": "^6.1.0",
+		"schemaimporter": "github:flowmcp/flowMCP-schemas#ab016a10b7986109d782bcb6056d781576ddc152",
 		"workers-mcp": "^0.0.13",
 		"zod": "^3.25.76"
 	},
