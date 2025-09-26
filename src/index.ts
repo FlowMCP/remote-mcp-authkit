@@ -5,11 +5,10 @@ import { FlowMCP } from "flowmcp";
 import { z } from "zod";
 import { AuthkitHandler } from "./authkit-handler";
 import type { Props } from "./props";
-
-// @ts-ignore - loadFromFolderStatic exists but no TypeScript definitions
 import { SchemaImporter } from 'schemaimporter'
 
 export class MyMCP extends McpAgent<Env, unknown, Props> {
+	// @ts-ignore - Type compatibility issue between different MCP SDK versions
 	server = new McpServer({
 		name: "FlowMCP Schema Server with AuthKit",
 		version: "1.0.0",
@@ -43,13 +42,11 @@ export class MyMCP extends McpAgent<Env, unknown, Props> {
 		console.log("Config:", config);
 
 		// Load schemas using static import
-		// @ts-ignore - loadFromFolderStatic exists but no TypeScript definitions
 		const arrayOfSchemas = await SchemaImporter
 			.loadFromFolderStatic( {
 				excludeSchemasWithImports: config.cfgSchemaImporter.excludeSchemasWithImports,
 				excludeSchemasWithRequiredServerParams: config.cfgSchemaImporter.excludeSchemasWithRequiredServerParams,
-				addAdditionalMetaData: config.cfgSchemaImporter.addAdditionalMetaData,
-				outputType: 'onlySchema'
+				addAdditionalMetaData: config.cfgSchemaImporter.addAdditionalMetaData
 			} )
 		console.log(`Loaded ${arrayOfSchemas.length} schemas`)
 
@@ -155,14 +152,14 @@ const createCombinedHandler = () => {
 		}
 
 		// For all other routes, delegate to AuthkitHandler
-		return AuthkitHandler(request, env, ctx);
+		return AuthkitHandler.fetch(request, env, ctx);
 	};
 };
 
 export default new OAuthProvider({
 	apiRoute: "/sse",
 	apiHandler: createCombinedHandler() as any, // Use 'any' for maximum flexibility
-	defaultHandler: AuthkitHandler as any, // Use 'any' for maximum flexibility
+	defaultHandler: AuthkitHandler.fetch as any, // Use 'any' for maximum flexibility
 	authorizeEndpoint: "/authorize",
 	tokenEndpoint: "/token",
 	clientRegistrationEndpoint: "/register",
